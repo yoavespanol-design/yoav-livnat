@@ -21,6 +21,8 @@
             --color-bg-tertiary: #1A1A1D;
             --color-bg-card: rgba(255, 255, 255, 0.03);
             
+            --color-bg-card-hover: rgba(255, 255, 255, 0.06);
+            
             --color-accent: #FF6B35;
             --color-accent-light: #FF8F6B;
             --color-accent-glow: rgba(255, 107, 53, 0.4);
@@ -61,16 +63,9 @@
             -moz-osx-font-smoothing: grayscale;
         }
 
-        /* Animations */
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(40px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes pulse-glow {
@@ -81,22 +76,6 @@
         @keyframes shimmer {
             0% { transform: translateX(-100%); }
             100% { transform: translateX(100%); }
-        }
-
-        @keyframes modalSlideIn {
-            from {
-                opacity: 0;
-                transform: translate(-50%, -50%) scale(0.9);
-            }
-            to {
-                opacity: 1;
-                transform: translate(-50%, -50%) scale(1);
-            }
-        }
-
-        @keyframes overlayFadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
         }
 
         @keyframes spin {
@@ -112,13 +91,9 @@
         .delay-2 { animation-delay: 0.2s; }
         .delay-3 { animation-delay: 0.3s; }
 
-        /* Background */
         .bg-gradient-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: 0; left: 0; right: 0; bottom: 0;
             background: 
                 radial-gradient(ellipse 80% 50% at 50% -20%, rgba(255, 107, 53, 0.15), transparent),
                 radial-gradient(ellipse 60% 40% at 100% 0%, rgba(244, 185, 66, 0.1), transparent),
@@ -129,98 +104,49 @@
 
         .noise-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: 0; left: 0; right: 0; bottom: 0;
             opacity: 0.03;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
             pointer-events: none;
             z-index: 1;
         }
 
-        /* Modal */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            z-index: 1000;
-            display: none;
-            animation: overlayFadeIn 0.3s ease forwards;
+        /* Registration Form */
+        .registration-form-container {
+            max-width: 500px;
+            margin: 0 auto;
+            width: 100%;
         }
 
-        .modal-overlay.active {
-            display: block;
-        }
-
-        .modal {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: var(--color-bg-secondary);
-            border: 1px solid var(--color-border);
-            border-radius: var(--border-radius-lg);
-            padding: 48px 40px;
-            max-width: 450px;
-            width: 90%;
-            z-index: 1001;
-            animation: modalSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5), 0 0 60px var(--color-accent-glow);
-        }
-
-        .modal-header {
-            text-align: center;
-            margin-bottom: 32px;
-        }
-
-        .modal-emoji {
-            font-size: 3.5rem;
+        .form-row {
+            display: flex;
+            gap: 16px;
             margin-bottom: 16px;
-            display: block;
         }
 
-        .modal-title {
-            font-family: var(--font-display);
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: var(--color-text-primary);
-            margin-bottom: 8px;
-        }
-
-        .modal-subtitle {
-            font-size: 1rem;
-            color: var(--color-text-secondary);
+        @media (max-width: 600px) {
+            .form-row {
+                flex-direction: column;
+                gap: 12px;
+            }
         }
 
         .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-label {
-            display: block;
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--color-text-secondary);
-            margin-bottom: 8px;
+            flex: 1;
         }
 
         .form-input {
             width: 100%;
-            padding: 16px 20px;
+            padding: 18px 24px;
             background: var(--color-bg-card);
             border: 1px solid var(--color-border);
             border-radius: var(--border-radius-sm);
             color: var(--color-text-primary);
             font-family: var(--font-main);
-            font-size: 1rem;
+            font-size: 1.05rem;
             transition: all 0.3s ease;
             outline: none;
+            text-align: right;
         }
 
         .form-input::placeholder {
@@ -230,11 +156,12 @@
         .form-input:focus {
             border-color: var(--color-accent);
             box-shadow: 0 0 20px var(--color-accent-glow);
+            background: var(--color-bg-card-hover);
         }
 
         .submit-btn {
             width: 100%;
-            padding: 18px 32px;
+            padding: 20px 40px;
             background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-light) 100%);
             color: white;
             border: none;
@@ -245,14 +172,19 @@
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             box-shadow: var(--shadow-button);
-            margin-top: 12px;
             position: relative;
             overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            animation: pulse-glow 3s ease-in-out infinite;
         }
 
         .submit-btn:disabled {
             opacity: 0.7;
             cursor: not-allowed;
+            animation: none;
         }
 
         .submit-btn::before {
@@ -268,13 +200,14 @@
         .submit-btn:hover:not(:disabled) {
             transform: translateY(-3px) scale(1.02);
             box-shadow: 0 12px 40px var(--color-accent-glow);
+            animation: none;
         }
 
         .submit-btn:hover:not(:disabled)::before {
             animation: shimmer 0.8s ease forwards;
         }
 
-        .submit-btn .spinner {
+        .spinner {
             display: none;
             width: 20px;
             height: 20px;
@@ -282,7 +215,6 @@
             border-top-color: transparent;
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
-            margin-left: 10px;
         }
 
         .submit-btn.loading .spinner {
@@ -293,17 +225,11 @@
             opacity: 0.7;
         }
 
-        .form-note {
-            text-align: center;
-            font-size: 0.8rem;
-            color: var(--color-text-tertiary);
-            margin-top: 16px;
-        }
-
         .form-error {
             color: #ff4444;
-            font-size: 0.85rem;
-            margin-top: 8px;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+            text-align: center;
             display: none;
         }
 
@@ -327,11 +253,9 @@
         .hero::before {
             content: '';
             position: absolute;
-            top: 50%;
-            left: 50%;
+            top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            width: 600px;
-            height: 600px;
+            width: 600px; height: 600px;
             background: radial-gradient(circle, var(--color-accent-glow) 0%, transparent 70%);
             opacity: 0.3;
             filter: blur(80px);
@@ -403,76 +327,16 @@
         .hero-subtitle::before {
             content: '';
             position: absolute;
-            top: 0;
-            right: 0;
-            width: 4px;
-            height: 100%;
+            top: 0; right: 0;
+            width: 4px; height: 100%;
             background: linear-gradient(180deg, var(--color-accent), var(--color-gold));
         }
 
-        .hero-cta {
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-light) 100%);
-            color: white;
-            padding: 20px 40px;
-            border-radius: 100px;
-            font-size: 1.15rem;
-            font-weight: 700;
-            text-decoration: none;
-            box-shadow: var(--shadow-button);
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-            border: none;
-            font-family: var(--font-display);
-            animation: pulse-glow 3s ease-in-out infinite;
-        }
-
-        .hero-cta::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-        }
-
-        .hero-cta:hover {
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 12px 48px var(--color-accent-glow);
-            animation: none;
-        }
-
-        .hero-cta:hover::before {
-            animation: shimmer 0.8s ease forwards;
-        }
-
-        /* Responsive */
         @media (max-width: 600px) {
-            .hero {
-                padding: 60px 20px;
-            }
-
-            .hero-badge {
-                font-size: 0.85rem;
-                padding: 10px 20px;
-            }
-
-            .hero-subtitle {
-                padding: 20px 24px;
-            }
-
-            .modal {
-                padding: 36px 28px;
-            }
-
-            .modal-title {
-                font-size: 1.5rem;
-            }
+            .hero { padding: 60px 20px; }
+            .hero-badge { font-size: 0.85rem; padding: 10px 20px; }
+            .hero-subtitle { padding: 20px 24px; }
+            .submit-btn { padding: 18px 32px; font-size: 1.1rem; }
         }
 
         ::selection {
@@ -482,55 +346,10 @@
     </style>
 </head>
 <body>
-    <!-- Background -->
     <div class="bg-gradient-overlay"></div>
     <div class="noise-overlay"></div>
 
-    <!-- Registration Modal -->
-    <div class="modal-overlay" id="modalOverlay">
-        <div class="modal">
-            <div class="modal-header">
-                <span class="modal-emoji">🚀</span>
-                <h2 class="modal-title">כמעט שם!</h2>
-                <p class="modal-subtitle">השאירו פרטים וקבלו גישה מיידית לקורס</p>
-            </div>
-            
-            <form id="registrationForm">
-                <div class="form-group">
-                    <label class="form-label">שם מלא</label>
-                    <input 
-                        type="text" 
-                        class="form-input" 
-                        id="fullName" 
-                        placeholder="איך קוראים לך?"
-                        required
-                    >
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">מספר טלפון</label>
-                    <input 
-                        type="tel" 
-                        class="form-input" 
-                        id="phone" 
-                        placeholder="05X-XXXXXXX"
-                        required
-                    >
-                </div>
-                
-                <p class="form-error" id="formError"></p>
-                
-                <button type="submit" class="submit-btn" id="submitBtn">
-                    <span class="btn-text">🇦🇷 Vamos!</span>
-                    <span class="spinner"></span>
-                </button>
-                
-                <p class="form-note">🔒 הפרטים שלך בטוחים איתנו</p>
-            </form>
-        </div>
-    </div>
-
-    <!-- Hero Section -->
+    <!-- Hero Section with Registration Form -->
     <section class="hero">
         <div class="hero-content">
             <span class="hero-badge fade-in">
@@ -549,10 +368,39 @@
                 קבל ממני 5 שיעורים קצרים ופרקטיים שיעזרו לך להתחיל להתנהל בדרום אמריקה
             </p>
             
-            <button class="hero-cta fade-in delay-3" id="openModalBtn">
-                <span>👇</span>
-                יאללה, בוא נתחיל
-            </button>
+            <!-- Registration Form -->
+            <div class="registration-form-container fade-in delay-3">
+                <form id="registrationForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input 
+                                type="text" 
+                                class="form-input" 
+                                id="fullName" 
+                                placeholder="שם מלא"
+                                required
+                            >
+                        </div>
+                        
+                        <div class="form-group">
+                            <input 
+                                type="tel" 
+                                class="form-input" 
+                                id="phone" 
+                                placeholder="מספר טלפון"
+                                required
+                            >
+                        </div>
+                    </div>
+                    
+                    <p class="form-error" id="formError"></p>
+                    
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        <span class="btn-text">🇦🇷 יאללה, בוא נתחיל!</span>
+                        <span class="spinner"></span>
+                    </button>
+                </form>
+            </div>
         </div>
     </section>
 
@@ -561,41 +409,26 @@
         // SUPABASE CONFIGURATION
         // החלף את הערכים האלה בערכים שלך מ-Supabase
         // =============================================
-        const SUPABASE_URL = 'YOUR_SUPABASE_URL';  // לדוגמה: https://xxxxx.supabase.co
-        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';  // המפתח הציבורי
+        var SUPABASE_URL = 'YOUR_SUPABASE_URL';
+        var SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
         
-        // Initialize Supabase
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        
-        // =============================================
-        // יצירת טבלה ב-Supabase:
-        // 
-        // CREATE TABLE leads (
-        //     id SERIAL PRIMARY KEY,
-        //     full_name TEXT NOT NULL,
-        //     phone TEXT NOT NULL,
-        //     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-        // );
-        // =============================================
+        // Initialize Supabase Client
+        var supabaseClient = null;
+        if (typeof window.supabase !== 'undefined') {
+            supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        }
 
         // Elements
-        const openModalBtn = document.getElementById('openModalBtn');
-        const modalOverlay = document.getElementById('modalOverlay');
-        const registrationForm = document.getElementById('registrationForm');
-        const submitBtn = document.getElementById('submitBtn');
-        const formError = document.getElementById('formError');
-
-        // Open Modal
-        openModalBtn.addEventListener('click', () => {
-            modalOverlay.classList.add('active');
-        });
+        var registrationForm = document.getElementById('registrationForm');
+        var submitBtn = document.getElementById('submitBtn');
+        var formError = document.getElementById('formError');
 
         // Form Submit
-        registrationForm.addEventListener('submit', async (e) => {
+        registrationForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            const fullName = document.getElementById('fullName').value.trim();
-            const phone = document.getElementById('phone').value.trim();
+            var fullName = document.getElementById('fullName').value.trim();
+            var phone = document.getElementById('phone').value.trim();
             
             // Validate
             if (!fullName || !phone) {
@@ -603,9 +436,8 @@
                 return;
             }
 
-            // Phone validation (Israeli format)
-            const phoneRegex = /^0\d{9,10}$/;
-            if (!phoneRegex.test(phone.replace(/-/g, ''))) {
+            var phoneClean = phone.replace(/-/g, '');
+            if (phoneClean.length < 9 || phoneClean.length > 11) {
                 showError('אנא הכנס מספר טלפון תקין');
                 return;
             }
@@ -616,20 +448,11 @@
             hideError();
 
             try {
-                // Send to Supabase
-                const { data, error } = await supabase
-                    .from('leads')
-                    .insert([
-                        { 
-                            full_name: fullName, 
-                            phone: phone.replace(/-/g, '') 
-                        }
-                    ]);
-
-                if (error) {
-                    console.error('Supabase error:', error);
-                    // Even if there's an error, redirect to course
-                    // You might want to handle this differently
+                // Send to Supabase if configured
+                if (supabaseClient && SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
+                    await supabaseClient
+                        .from('leads')
+                        .insert([{ full_name: fullName, phone: phoneClean }]);
                 }
 
                 // Save to localStorage
@@ -641,7 +464,6 @@
 
             } catch (err) {
                 console.error('Error:', err);
-                // Redirect anyway (fail-safe)
                 localStorage.setItem('registered', 'true');
                 localStorage.setItem('userName', fullName);
                 window.location.href = 'course.html';
@@ -655,11 +477,6 @@
 
         function hideError() {
             formError.classList.remove('show');
-        }
-
-        // Check if already registered
-        if (localStorage.getItem('registered') === 'true') {
-            window.location.href = 'course.html';
         }
     </script>
 </body>
