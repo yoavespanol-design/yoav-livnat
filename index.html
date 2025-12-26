@@ -396,7 +396,7 @@
                     <p class="form-error" id="formError"></p>
                     
                     <button type="submit" class="submit-btn" id="submitBtn">
-                        <span class="btn-text">🇦🇷 יאללה, בוא נתחיל!</span>
+                        <span class="btn-text">יאללה, בוא נתחיל!</span>
                         <span class="spinner"></span>
                     </button>
                 </form>
@@ -409,12 +409,17 @@
         // SUPABASE CONFIGURATION
         // החלף את הערכים האלה בערכים שלך מ-Supabase
         // =============================================
-        var SUPABASE_URL = 'YOUR_SUPABASE_URL';
+        var SUPABASE_URL = 'YOUR_SUPABASE_URL';  // לדוגמה: https://abcdefg.supabase.co
         var SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
         
-        // Initialize Supabase Client
+        // Initialize Supabase Client - only if valid URL
         var supabaseClient = null;
-        if (typeof window.supabase !== 'undefined') {
+        
+        function isValidSupabaseUrl(url) {
+            return url && url.startsWith('https://') && url.includes('.supabase.co');
+        }
+        
+        if (typeof window.supabase !== 'undefined' && isValidSupabaseUrl(SUPABASE_URL)) {
             supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         }
 
@@ -449,10 +454,17 @@
 
             try {
                 // Send to Supabase if configured
-                if (supabaseClient && SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
-                    await supabaseClient
+                if (supabaseClient) {
+                    var result = await supabaseClient
                         .from('leads')
-                        .insert([{ full_name: fullName, phone: phoneClean }]);
+                        .insert([{ 
+                            full_name: fullName, 
+                            phone_number: parseInt(phoneClean) 
+                        }]);
+                    
+                    if (result.error) {
+                        console.error('Supabase error:', result.error);
+                    }
                 }
 
                 // Save to localStorage
@@ -464,6 +476,7 @@
 
             } catch (err) {
                 console.error('Error:', err);
+                // Redirect anyway
                 localStorage.setItem('registered', 'true');
                 localStorage.setItem('userName', fullName);
                 window.location.href = 'course.html';
