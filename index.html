@@ -20,23 +20,17 @@
             --color-bg-secondary: #111113;
             --color-bg-tertiary: #1A1A1D;
             --color-bg-card: rgba(255, 255, 255, 0.03);
-            
             --color-bg-card-hover: rgba(255, 255, 255, 0.06);
-            
             --color-accent: #FF6B35;
             --color-accent-light: #FF8F6B;
             --color-accent-glow: rgba(255, 107, 53, 0.4);
             --color-gold: #F4B942;
-            
             --color-text-primary: #FFFFFF;
             --color-text-secondary: rgba(255, 255, 255, 0.7);
             --color-text-tertiary: rgba(255, 255, 255, 0.5);
-            
             --color-border: rgba(255, 255, 255, 0.08);
-            
             --font-main: 'Heebo', -apple-system, BlinkMacSystemFont, sans-serif;
             --font-display: 'Rubik', -apple-system, BlinkMacSystemFont, sans-serif;
-            
             --shadow-button: 0 8px 32px var(--color-accent-glow);
             --border-radius-lg: 24px;
             --border-radius-md: 16px;
@@ -405,92 +399,136 @@
     </section>
 
     <script>
-        // =============================================
-        // SUPABASE CONFIGURATION
-        // החלף את הערכים האלה בערכים שלך מ-Supabase
-        // =============================================
-        var SUPABASE_URL = https://nheqcqhrrlvxrrckajbl.supabase.co;  
-        var SUPABASE_ANON_KEY = sb_publishable_PBiXbfnnKn60SxxTcjwZ2g_PUKIgIDd;
+    // =============================================
+    // SUPABASE CONFIGURATION - IMPORTANT!
+    // =============================================
+    // 
+    =========
+
+    var SUPABASE_URL = "https://nheqcqhrrlvxrrckajbl.supabase.co";
+    var SUPABASE_ANON_KEY = "sb_publishable_PBiXbfnnKn60SxxTcjwZ2g_PUKIgIDd";
+
+    // =============================================
+    // DO NOT EDIT BELOW THIS LINE
+    // =============================================
+
+    (function() {
+        "use strict";
         
-        // Initialize Supabase Client - only if valid URL
         var supabaseClient = null;
         
-        function isValidSupabaseUrl(url) {
-            return url && url.startsWith('https://') && url.includes('.supabase.co');
+        // Check if Supabase is configured
+        function isConfigured() {
+            if (!SUPABASE_URL || !SUPABASE_ANON_KEY) return false;
+            if (SUPABASE_URL === "YOUR_PROJECT_URL") return false;
+            if (SUPABASE_ANON_KEY === "YOUR_ANON_KEY") return false;
+            if (SUPABASE_URL.indexOf(".supabase.co") === -1) return false;
+            return true;
         }
         
-        if (typeof window.supabase !== 'undefined' && isValidSupabaseUrl(SUPABASE_URL)) {
-            supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Initialize Supabase
+        try {
+            if (typeof window.supabase !== "undefined" && isConfigured()) {
+                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                console.log("Supabase connected!");
+            } else if (!isConfigured()) {
+                console.log("Supabase not configured - form will redirect without saving data");
+            }
+        } catch (err) {
+            console.error("Supabase init error:", err);
         }
-
-        // Elements
-        var registrationForm = document.getElementById('registrationForm');
-        var submitBtn = document.getElementById('submitBtn');
-        var formError = document.getElementById('formError');
-
-        // Form Submit
-        registrationForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
+        
+        // Wait for page to load
+        document.addEventListener("DOMContentLoaded", function() {
+            var form = document.getElementById("registrationForm");
+            var submitBtn = document.getElementById("submitBtn");
+            var formError = document.getElementById("formError");
+            var fullNameInput = document.getElementById("fullName");
+            var phoneInput = document.getElementById("phone");
             
-            var fullName = document.getElementById('fullName').value.trim();
-            var phone = document.getElementById('phone').value.trim();
-            
-            // Validate
-            if (!fullName || !phone) {
-                showError('אנא מלא את כל השדות');
+            if (!form || !submitBtn) {
+                console.error("Form elements not found");
                 return;
             }
-
-            var phoneClean = phone.replace(/-/g, '');
-            if (phoneClean.length < 9 || phoneClean.length > 11) {
-                showError('אנא הכנס מספר טלפון תקין');
-                return;
+            
+            function showError(msg) {
+                if (formError) {
+                    formError.textContent = msg;
+                    formError.classList.add("show");
+                }
             }
-
-            // Show loading
-            submitBtn.classList.add('loading');
-            submitBtn.disabled = true;
-            hideError();
-
-            try {
+            
+            function hideError() {
+                if (formError) {
+                    formError.classList.remove("show");
+                }
+            }
+            
+            function goToCourse() {
+                window.location.href = "course.html";
+            }
+            
+            // Handle form submit
+            form.addEventListener("submit", function(e) {
+                e.preventDefault();
+                
+                var fullName = fullNameInput ? fullNameInput.value.trim() : "";
+                var phone = phoneInput ? phoneInput.value.trim() : "";
+                
+                // Validate
+                if (!fullName || !phone) {
+                    showError("אנא מלא את כל השדות");
+                    return;
+                }
+                
+                var phoneClean = phone.replace(/[-\s]/g, "");
+                if (phoneClean.length < 9 || phoneClean.length > 11) {
+                    showError("אנא הכנס מספר טלפון תקין");
+                    return;
+                }
+                
+                // Show loading
+                submitBtn.classList.add("loading");
+                submitBtn.disabled = true;
+                hideError();
+                
+                // Save to localStorage
+                try {
+                    localStorage.setItem("registered", "true");
+                    localStorage.setItem("userName", fullName);
+                } catch (storageErr) {
+                    console.log("localStorage not available");
+                }
+                
                 // Send to Supabase if configured
                 if (supabaseClient) {
-                    var result = await supabaseClient
-                        .from('leads')
-                        .insert([{ 
-                            full_name: fullName, 
-                            phone_number: parseInt(phoneClean) 
-                        }]);
+                    var leadData = {
+                        full_name: fullName,
+                        phone_number: phoneClean
+                    };
                     
-                    if (result.error) {
-                        console.error('Supabase error:', result.error);
-                    }
+                    supabaseClient
+                        .from("leads")
+                        .insert([leadData])
+                        .then(function(response) {
+                            if (response.error) {
+                                console.error("Supabase error:", response.error.message);
+                            } else {
+                                console.log("Lead saved successfully!");
+                            }
+                            goToCourse();
+                        })
+                        .catch(function(err) {
+                            console.error("Network error:", err);
+                            goToCourse();
+                        });
+                } else {
+                    // No Supabase - just redirect
+                    setTimeout(goToCourse, 500);
                 }
-
-                // Save to localStorage
-                localStorage.setItem('registered', 'true');
-                localStorage.setItem('userName', fullName);
-
-                // Redirect to course
-                window.location.href = 'course.html';
-
-            } catch (err) {
-                console.error('Error:', err);
-                // Redirect anyway
-                localStorage.setItem('registered', 'true');
-                localStorage.setItem('userName', fullName);
-                window.location.href = 'course.html';
-            }
+            });
         });
-
-        function showError(message) {
-            formError.textContent = message;
-            formError.classList.add('show');
-        }
-
-        function hideError() {
-            formError.classList.remove('show');
-        }
+    })();
     </script>
 </body>
 </html>
